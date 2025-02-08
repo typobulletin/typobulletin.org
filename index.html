@@ -1,11 +1,44 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TypoBulletin</title>
-  </head>
-  <body>
-    This page was intentionally left blank.
-  </body>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Типографический бюллетень</title>
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <script>
+      function setRandomImageSrc() {
+          const randomNumber = Math.floor(Math.random() * 216) + 1;
+          const paddedNumber = String(randomNumber).padStart(3, '0');
+          const imgElement = document.getElementById('dynamicImage');
+          imgElement.src = `letters/image-${paddedNumber}.png`;
+      }
+  </script>
+</head>
+<body onload="setRandomImageSrc()">
+    <div class="top-left">
+        <p>Типографический бюллетень</p>
+        <p>Le bulletin typographique</p>
+        <br>
+        <a href="#">à propos</a><br>
+        <a href="#">le sommaire</a><br>
+        <a href="#">colophon</a><br>
+        <a href="#">acheter</a>
+    </div>
+    <div class="top-right">
+        <a href="#" class="active-lang">RU</a>
+        <br>
+        <a href="#" class="inactive-lang">FR</a>
+    </div>
+    <div class="bottom-left">
+        <p><a href="mailto:info@typobulletin.org">info@typobulletin.org</a></p>
+    </div>
+    <div class="bottom-right">
+      <img id="dynamicImage">
+    </div>
+    <video class="center-video" autoplay loop muted playsinline>
+        <source src="video/tb01-video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+</body>
 </html>
