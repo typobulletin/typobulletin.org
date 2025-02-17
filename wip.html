@@ -15,30 +15,33 @@
   </script>
 </head>
 <body onload="setRandomImageSrc()">
-    <div class="top-left">
-        <p>Типографический бюллетень</p>
-        <p>Le bulletin typographique</p>
-        <br>
-        <a href="#">à propos</a><br>
-        <a href="#">le sommaire</a><br>
-        <a href="#">colophon</a><br>
-        <a href="#">acheter</a>
+    <div class="container">
+        <div class="top">
+            <div>
+                Типографический бюллетень<br>Le bulletin typographique
+            </div>
+            <div class="languages">
+                RU<br>FR
+            </div>
+        </div>
+        <div class="content">
+            <div class="menu">
+                <a href="#">à propos</a>
+                <a href="#">le sommaire</a>
+                <a href="#">colophon</a>
+                <a href="#">acheter</a>
+            </div>
+            <div class="video-container">
+                <video class="center-video" autoplay loop muted playsinline>
+                    <source src="video/tb01-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="email">info@typobulletin.org</div>
+            <img id="dynamicImage" alt="Dynamic Image">
+        </div>
     </div>
-    <div class="top-right">
-        <a href="#" class="active-lang">RU</a>
-        <br>
-        <a href="#" class="inactive-lang">FR</a>
-    </div>
-    <div class="bottom-left">
-        <p><a href="mailto:info@typobulletin.org">info@typobulletin.org</a></p>
-    </div>
-    <div class="bottom-right">
-      <img id="dynamicImage">
-    </div>
-    <video class="center-video" autoplay loop muted playsinline>
-        <source src="video/tb01-video.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
 </body>
 </html>
