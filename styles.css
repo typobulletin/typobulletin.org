@@ -18,7 +18,7 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: calc(100vh - 72px); /* Adjust for top+bottom margins */
     margin: 36px;
 }
 
@@ -70,7 +70,6 @@ body {
 
 .video-container video {
     width: auto;
-    /* height: 100%; */
     max-width: 100%;
     max-height: 68vh;
 }
@@ -79,9 +78,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    
-    margin-top: 34px;
-    flex: 1;
+    margin-top: auto;
+    flex-shrink: 0;
 }
 
 .footer .email {
