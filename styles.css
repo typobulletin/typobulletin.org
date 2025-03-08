@@ -195,3 +195,27 @@
   .italic {
     font-family: 'Neutral Italic', italic; 
   }
+  
+  .striked {
+    color: var(--text-color);
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    white-space: nowrap; /* Prevent line breaks within the element */
+  }
+  
+  .striked::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 47%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-bottom: 1.7px solid;
+  }
+  
+  }
+  /* .striked {
+    text-decoration: line-through;
+  } */
