@@ -188,6 +188,10 @@
     max-height: 100px;
   }
   
+  .max500 {
+    max-width: 500px;
+  }
+
   .highlight {
     color: var(--highlight);
   }
@@ -212,6 +216,3 @@
     left: 0;
     border-bottom: 1.7px solid;
   }
-  /* .striked {
-    text-decoration: line-through;
-  } */
