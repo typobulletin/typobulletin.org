@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roger Enfant</title>
+    <link rel="stylesheet" href="../styles.css" type="text/css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body {
+            hyphens: auto;
+            display: grid;
+            grid-template-columns: 400px 1fr auto;
+            grid-template-rows: auto auto;
+            grid-template-areas:
+                "main-title canvas"
+                "typecase canvas";
+        }
+
+        #type-case-container {
+            grid-area: typecase;
+            display: flex;
+            flex-direction: column;
+            border: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            text-align: left;
+            overflow: hidden;
+            overflow-y: auto;
+            height: calc(100vh);
+        }
+
+
+        #main-title {
+            grid-area: main-title;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 30%;
+            max-width: 350px;
+            z-index: 1;
+            text-align: left;
+            margin: var(--margin) 0 0 var(--margin);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #type-case {
+            overflow: scroll;
+            scrollbar-width: none;
+            flex-grow: 0;
+            margin: 0 0 0 var(--margin);
+        line-height: 0;
+        }
+        
+        #type-case img {
+            height: 72px;
+            width: auto;
+            margin: 10px 10px 10px 0;
+            cursor: grab;
+        }
+
+        #type-case::-webkit-scrollbar {
+            display: none;
+        }
+
+        #spacer {
+            height: 120px;
+            width: 100%;
+        }
+
+        #canvas-container {
+            grid-area: canvas;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        canvas {
+            border: none;
+            border-left: 1px solid black;
+            touch-action: none;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        #help {
+            position: absolute;
+            top: 120px;
+            left: var(--margin);
+            color: var(--highlight);
+            font-family: 'Neutral Italic';
+            z-index: 0;
+        }
+
+        #button-panel {
+            position: absolute;
+            top: var(--margin);
+            left: var(--margin);
+            display: flex;
+            gap: 10px;
+            z-index: 1;
+        }
+
+        #button-panel button,
+        #button-panel input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        #button-panel input[type="range"] {
+            width: 150px;
+        }
+
+        .language-chooser {
+            position: fixed;
+            top: var(--margin);
+            right: var(--margin);
+            z-index: 20;
+        }
+        #only-desktop {
+                visibility: hidden;
+                position: fixed; 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%); 
+                z-index: 9999; 
+            }
+        @media (max-width: 920px) {
+            body {
+                grid-template-columns: 100%;
+                grid-template-rows: auto auto auto 330px;
+                grid-template-areas:
+                    "main-title"
+                    "language-chooser"
+                    "canvas"
+                    "typecase";
+                width: 100%;
+            }
+
+            canvas {
+                visibility: hidden;
+            }
+
+            #type-case-container {
+                visibility: hidden;
+            }
+
+            #main-title {
+                visibility: hidden;
+            }
+
+            #button-panel {
+                visibility: hidden;
+            }
+
+            #help {
+                visibility: hidden;
+            }
+
+            #only-desktop {
+                visibility: visible;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="only-desktop">Пожалуйста, откройте эту страницу на устройстве с большим экраном или увеличьте ширину окна.</div>
+    <div id="canvas-container">
+        <canvas id="c"></canvas>
+        <div id="button-panel">
+            <a href="javascript:history.back()">← назад</a><br>
+            <a id="save-button">сохранить</a><br>
+            <a id="reset-button">сбросить</a>
+        </div>
+        <div id="help">
+            — перетаскивайте литеры на свободное поле<br>
+            — мотайте кассу вверх, чтобы увидеть все литеры
+        </div>
+    </div>
+    <div id="main-title">
+        <div class="tb-name">
+            <a href="../ru">
+                Типографический бюллетень<br>Le bulletin typographique
+            </a>
+        </div>
+    </div>
+    <div id="type-case-container">
+        <div id="type-case">
+            <div id="spacer"></div>
+        </div>
+    </div>
+    <div class="language-chooser">
+        RU<br><a href="../fr/index.html">FR</a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <script>
+        (function () {
+            const canvas = new fabric.Canvas('c', {
+                hoverCursor: 'pointer',
+                selection: false,
+            });
+
+            // Resize the canvas to fit its container
+            function resizeCanvas() {
+                const container = document.getElementById('canvas-container');
+                canvas.setWidth(container.clientWidth);
+                canvas.setHeight(container.clientHeight);
+                canvas.requestRenderAll();
+            }
+
+            // Initial resize
+            resizeCanvas();
+
+            // Resize the canvas when the window is resized
+            window.addEventListener('resize', resizeCanvas);
+
+            // Load prefabricated PNGs into the type case
+            const typeCase = document.getElementById('type-case');
+            const imageCount = 216;
+
+            for (let i = 1; i <= imageCount; i++) {
+                const url = `../jpg/image-${i.toString().padStart(3, '0')}.jpg`;
+                const id = i;
+                const img = document.createElement('img');
+                img.src = url;
+                img.id = id;
+                img.draggable = true;
+                img.selectable = true;
+                img.loading = 'lazy';
+                typeCase.appendChild(img);
+
+                img.addEventListener('dragstart', function (e) {
+                    e.dataTransfer.setData('text/plain', url);
+                    e.dataTransfer.setData('id', id);
+                });
+            }
+
+            // Handle dropping images onto the canvas
+            canvas.wrapperEl.addEventListener('dragover', function (e) {
+                e.preventDefault();
+            });
+
+            canvas.wrapperEl.addEventListener('drop', function (e) {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('id');
+                const url = `../fullsize/image-${id.toString().padStart(3, '0')}.png`;
+                fabric.Image.fromURL(url, function (img) {
+                    img.scaleToWidth(256);
+                    img.scaleToHeight(256);
+
+                    // Calculate the position relative to the canvas
+                    const canvasOffset = canvas.wrapperEl.getBoundingClientRect();
+                    const x = e.clientX - canvasOffset.left - 64;
+                    const y = e.clientY - canvasOffset.top - 64;
+
+                    img.set({
+                        left: x,
+                        top: y,
+                        cornerSize: 16,
+                        cornerStyle: 'circle',
+                        cornerColor: 'black',
+                        transparentCorners: false,
+                        borderColor: 'black',
+                        borderScaleFactor: 1,
+                        padding: 0,
+                        hasBorders: true
+                    });
+                    canvas.add(img);
+
+                    // Hide the help message after the first drop
+                    const helpMessage = document.getElementById('help');
+                    helpMessage.style.display = 'none';
+                });
+            });
+
+            // Customize object interactions
+            canvas.on({
+                'object:added': function (e) {
+                    e.target.setControlsVisibility({
+                        mt: false, // middle top disable
+                        mb: false, // midle bottom disable
+                        ml: false, // middle left disable
+                        mr: false, // middle right disable
+                        bl: true,  // bottom left
+                        br: true,  // bottom right
+                        tl: true,  // top left
+                        tr: true,  // top right
+                        mtr: true  // rotate
+                    });
+                },
+                'object:moving': function (e) {
+                    e.target.opacity = 0.6;
+                },
+                'object:modified': function (e) {
+                    e.target.opacity = 1;
+                },
+            });
+
+            // Handle keydown event for deleting selected object
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Backspace' || e.key === 'Delete') {
+                    const activeObject = canvas.getActiveObject();
+                    if (activeObject) {
+                        canvas.remove(activeObject);
+                    }
+                }
+            });
+
+            fabric.Image.prototype.getSvgSrc = function () {
+                return this.toDataURLforSVG();
+            };
+
+            fabric.Image.prototype.toDataURLforSVG = function (options) {
+                var el = fabric.util.createCanvasElement();
+                el.width = this._element.naturalWidth || this._element.width;
+                el.height = this._element.naturalHeight || this._element.height;
+                el.getContext("2d").drawImage(this._element, 0, 0);
+                var data = el.toDataURL(options);
+                return data;
+            };
+            // Save button functionality
+            document.getElementById('save-button').addEventListener('click', function () {
+                const svg = canvas.toSVG({
+                    encoding: 'ISO-8859-1',
+                    suppressPreamble: true
+                });
+
+                // Generate the current date and time
+                const now = new Date();
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                const year = now.getFullYear();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                // Format the date and time as dd.mm.year-hh.mm.ss
+                const dateTimeString = `${day}.${month}.${year}-${hours}.${minutes}.${seconds}`;
+                const fileName = `roger-enfant-${dateTimeString}.svg`;
+
+                const link = document.createElement('a');
+                link.href = `data:image/svg+xml;utf8,${svg}`;
+                link.download = fileName;
+                link.click();
+            });
+
+
+            // Reset button functionality
+            document.getElementById('reset-button').addEventListener('click', function () {
+                canvas.clear();
+                canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+            });
+
+            // Panning functionality
+            let panning = false;
+            canvas.on('mouse:up', function () {
+                panning = false;
+            });
+
+            canvas.on('mouse:down', function (e) {
+                if (!e.target) {
+                    panning = true;
+                }
+            });
+
+            canvas.on('mouse:move', function (e) {
+                if (panning && e && e.e) {
+                    const delta = new fabric.Point(e.e.movementX, e.e.movementY);
+                    canvas.relativePan(delta);
+                }
+            });
+
+
+        })();
+    </script>
+</body>
+
+</html>
