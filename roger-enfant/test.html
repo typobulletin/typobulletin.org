@@ -231,27 +231,6 @@
             // Resize the canvas when the window is resized
             window.addEventListener('resize', resizeCanvas);
 
-            // Load prefabricated PNGs into the type case
-            const typeCase = document.getElementById('type-case');
-            const imageCount = 216;
-
-            for (let i = 1; i <= imageCount; i++) {
-                const url = `../jpg/image-${i.toString().padStart(3, '0')}.jpg`;
-                const id = i;
-                const img = document.createElement('img');
-                img.src = url;
-                img.id = id;
-                img.draggable = true;
-                img.selectable = true;
-                img.loading = 'lazy';
-                typeCase.appendChild(img);
-
-                img.addEventListener('dragstart', function (e) {
-                    e.dataTransfer.setData('text/plain', url);
-                    e.dataTransfer.setData('id', id);
-                });
-            }
-
             // Handle dropping images onto the canvas
             canvas.wrapperEl.addEventListener('dragover', function (e) {
                 e.preventDefault();
@@ -387,6 +366,26 @@
                 }
             });
 
+            // Load prefabricated PNGs into the type case
+            const typeCase = document.getElementById('type-case');
+            const imageCount = 216;
+
+            for (let i = 1; i <= imageCount; i++) {
+                const url = `../jpg/image-${i.toString().padStart(3, '0')}.jpg`;
+                const id = i;
+                const img = document.createElement('img');
+                img.src = url;
+                img.id = id;
+                img.draggable = true;
+                img.selectable = true;
+                img.loading = 'lazy';
+                typeCase.appendChild(img);
+
+                img.addEventListener('dragstart', function (e) {
+                    e.dataTransfer.setData('text/plain', url);
+                    e.dataTransfer.setData('id', id);
+                });
+            }
 
         })();
     </script>
