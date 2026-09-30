@@ -1,0 +1,17 @@
+# `live` is cut from this directory verbatim (see bin/make-live), which
+# stages it with .live/ as git's work tree — so this is the only ignore file
+# that run consults. The repository root's never applies here, and without
+# this one the Finder's droppings publish to the live site.
+#
+# This file travels to `live` along with the rest of the tree, deliberately:
+# bin/make-live's promise is that the branch *is* this directory, and an
+# ignore file that hid itself would quietly make the branch a subset of it —
+# the one drift the tests here exist to catch. It is listed in
+# test/live/placeholder.test.js's manifest for the same reason.
+
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+.vscode/
